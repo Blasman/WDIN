@@ -2,7 +2,7 @@ import os, sys, json, ctypes
 import tkinter as tk
 from tkinter import messagebox
 
-VERSION = "v3.005"
+VERSION = "dev"
 
 config = {}
 admin = False

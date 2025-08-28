@@ -1,1 +1,1 @@
-Non functional repo branch. Do not try to use.
+The python module version of Watch Dogs Invasion Notifier.

@@ -25,6 +25,7 @@ Press the `Network` button and choose your network device. Press `WDIN` to start
 
 For more information, features, and troubleshooting, see the original mod page:
 https://www.nexusmods.com/watchdogs/mods/395
+Note that your `config.json` and `current_event.txt` files are now located at `%LOCALAPPDATA%/WDIN`
 
 ---
 MIT License. See LICENSE file for details.

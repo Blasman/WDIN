@@ -1,0 +1,51 @@
+name: Auto-tag release from pyproject
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'pyproject.toml'
+
+permissions:
+  contents: write
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Read version from pyproject.toml
+        id: get_version
+        run: |
+          VER=$(grep -E '^version\s*=\s*"' pyproject.toml | head -1 | sed -E 's/.*"([^\"]+)".*/\1/')
+          echo "Found version: $VER"
+          if [ -z "$VER" ]; then
+            echo "::error::Could not parse version from pyproject.toml"
+            exit 1
+          fi
+          echo "version=$VER" >> $GITHUB_OUTPUT
+
+      - name: Check tag exists on remote
+        run: |
+          VER=${{ steps.get_version.outputs.version }}
+          echo "Checking for tag: $VER"
+          git fetch --tags
+          if git ls-remote --tags origin | awk '{print $2}' | grep -q "refs/tags/$VER$"; then
+            echo "Tag $VER already exists on remote; skipping tag creation."
+            exit 0
+          fi
+
+      - name: Create and push tag
+        if: steps.get_version.outputs.version != ''
+        run: |
+          VER=${{ steps.get_version.outputs.version }}
+          echo "Creating tag $VER"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$VER" -m "Release $VER"
+          git push origin "$VER"

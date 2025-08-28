@@ -17,11 +17,19 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - name: Update VERSION in core.py to match tag
+      - name: Verify tag matches pyproject version and sync core VERSION
         run: |
-          TAG_NAME=${GITHUB_REF##*/}
-          sed -i "s/^VERSION = \".*\"/VERSION = \"$TAG_NAME\"/" src/wdin/core.py
-          head -10 src/wdin/core.py
+          TAG=${GITHUB_REF#refs/tags/}
+          echo "Tag: $TAG"
+          PYV=$(grep -E '^version\s*=\s*"' pyproject.toml | head -1 | sed -E 's/.*"([^\"]+)".*/\1/')
+          echo "pyproject version: $PYV"
+          if [ "${TAG}" != "${PYV}" ]; then
+            echo "::error::Tag ($TAG) does not match pyproject.toml version ($PYV). Bump pyproject.toml version and/or push the correct tag."
+            exit 1
+          fi
+          # Set core.py VERSION to have the v prefix used at runtime (v<version>)
+          sed -E -i "s/^VERSION = .*$/VERSION = \"v${PYV}\"/" src/wdin/core.py
+          head -n 6 src/wdin/core.py
       - name: Install build dependencies
         run: |
           python -m pip install --upgrade pip

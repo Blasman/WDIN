@@ -48,4 +48,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag -a "$VER" -m "Release $VER"
-          git push origin "$VER"
+          # If a repo PAT is provided as the secret REPO_PAT, use it to push so the push will trigger other workflows.
+          if [ -n "${{ secrets.REPO_PAT }}" ]; then
+            echo "Pushing tag using REPO_PAT (will trigger other workflows)."
+            git remote set-url origin https://x-access-token:${{ secrets.REPO_PAT }}@github.com/${{ github.repository }}.git
+            git push origin "$VER"
+          else
+            echo "REPO_PAT secret not found. Pushing with default credentials (GITHUB_TOKEN) — note: pushes made with GITHUB_TOKEN do NOT trigger downstream workflows."
+            git push origin "$VER"
+          fi

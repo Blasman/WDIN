@@ -1,0 +1,20 @@
+[project]
+name = "wdin"
+version = "0.1.0"
+description = "Watch Dogs Invasion Notifier"
+authors = [{ name = "Blasman"}]
+dependencies = [
+    "requests",
+    "wmi",
+    "scapy",
+    "ahk",
+    "pygame",
+    "pynput",
+    "pywin32"
+]
+
+[project.scripts]
+wdin = "wdin.core:main"
+
+[tool.setuptools.package-data]
+"wdin" = ["bin/*", "data/*", "data/sounds/*"]

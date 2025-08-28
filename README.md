@@ -1,2 +1,1 @@
-# WDIN
-Watch Dogs Invasion Notifier (Python Module)
+Non functional repo branch. Do not try to use.

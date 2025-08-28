@@ -3,6 +3,14 @@ name = "wdin"
 version = "0.1.0"
 description = "Watch Dogs Invasion Notifier"
 authors = [{ name = "Blasman"}]
+license = { file = "LICENSE" }
+readme = "README.md"
+keywords = ["notifier", "automation", "gaming", "watchdogs"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows"
+]
 dependencies = [
     "requests",
     "wmi",
@@ -12,6 +20,9 @@ dependencies = [
     "pynput",
     "pywin32"
 ]
+
+[project.urls]
+Homepage = "https://github.com/Blasman/WDIN"
 
 [project.scripts]
 wdin = "wdin.core:main"
